@@ -52,7 +52,7 @@ private [dbscan] object PointIndexer {
         }
 
         val newPoint = new Point (pt.coordinates, pointIndex, boxId, distanceFromOrigin,
-            pt.precomputedNumberOfNeighbors, pt.clusterId)
+            pt.precomputedNumberOfNeighbors, pt.clusterId, pt.recordId)
 
         (new PointSortKey (newPoint), newPoint)
       })

@@ -17,38 +17,43 @@ class Point (
     val boxId: BoxId = 0,
     val distanceFromOrigin: Double = 0.0,
     val precomputedNumberOfNeighbors: Long = 0,
-    val clusterId: ClusterId = DbscanModel.UndefinedCluster) extends Serializable with Ordered[Point] {
+    val clusterId: ClusterId = DbscanModel.UndefinedCluster,
+    val recordId: Long = 0) extends Serializable with Ordered[Point] {
 
   def this (coords: Array[Double]) = this (new PointCoordinates (coords))
 
   def this (pt: Point) = this (pt.coordinates, pt.pointId, pt.boxId, pt.distanceFromOrigin,
-      pt.precomputedNumberOfNeighbors,  pt.clusterId)
+      pt.precomputedNumberOfNeighbors,  pt.clusterId, pt.recordId)
 
   def this (coords: Double*) = this (new PointCoordinates (coords.toArray))
 
   def withPointId (newId: PointId) = {
     new Point (this.coordinates, newId, this.boxId, this.distanceFromOrigin,
-        this.precomputedNumberOfNeighbors,  this.clusterId)
+        this.precomputedNumberOfNeighbors,  this.clusterId, this.recordId)
   }
 
   def withBoxId (newBoxId: BoxId) = {
     new Point (this.coordinates, this.pointId, newBoxId, this.distanceFromOrigin,
-        this.precomputedNumberOfNeighbors,  this.clusterId)
+        this.precomputedNumberOfNeighbors,  this.clusterId, this.recordId)
   }
 
   def withDistanceFromOrigin (newDistance: Double) = {
     new Point (this.coordinates, this.pointId, this.boxId, newDistance,
-        this.precomputedNumberOfNeighbors,  this.clusterId)
+        this.precomputedNumberOfNeighbors,  this.clusterId, this.recordId)
   }
 
   def withNumberOfNeighbors (newNumber: Long) = {
     new Point (this.coordinates, this.pointId, this.boxId, this.distanceFromOrigin, newNumber,
-       this.clusterId)
+       this.clusterId, this.recordId)
   }
 
   def withClusterId (newId: ClusterId) = {
     new Point (this.coordinates, this.pointId, this.boxId, this.distanceFromOrigin, this.precomputedNumberOfNeighbors,
-      newId)
+      newId, this.recordId)
+  }
+  
+  def withRecordId (newRecordId: Long) = {
+    new Point (this.coordinates, this.pointId, this.boxId, this.distanceFromOrigin, this.precomputedNumberOfNeighbors, this.clusterId, newRecordId)
   }
 
   override def equals (that: Any): Boolean = {

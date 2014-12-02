@@ -75,13 +75,13 @@ val settings: DbscanSettings)
     *
     * @return
     */
-  def noisePoints: RDD[Point] = { allPoints.filter(_.clusterId == DbscanModel.NoisePoint) }
+  def noisePoints: RawDataSet = { allPoints.filter(_.clusterId == DbscanModel.NoisePoint) }
 
   /** Returns points which were assigned to clusters
     *
     * @return
     */
-  def clusteredPoints: RDD[Point] = { allPoints.filter( _.clusterId != DbscanModel.NoisePoint) }
+  def clusteredPoints: RawDataSet = { allPoints.filter( _.clusterId != DbscanModel.NoisePoint) }
 }
 
 /** Contains constants which designate cluster ID

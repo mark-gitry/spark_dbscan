@@ -12,6 +12,6 @@ private [dbscan] class PartiallyMutablePoint (p: Point, val tempId: TempPointId)
   var visited: Boolean = false
 
   def toImmutablePoint: Point = new Point (this.coordinates, this.pointId, this.boxId, this.distanceFromOrigin,
-    this.precomputedNumberOfNeighbors, this.transientClusterId)
+    this.precomputedNumberOfNeighbors, this.transientClusterId, this.recordId)
 
 }
