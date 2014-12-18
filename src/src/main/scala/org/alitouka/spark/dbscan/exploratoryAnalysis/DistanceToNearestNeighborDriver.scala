@@ -67,6 +67,27 @@ object DistanceToNearestNeighborDriver extends DistanceCalculation {
   }
   
   /**
+   * Rather than finding the nearest neighbor, find the n-th nearest neighbors.
+   */
+  def createNearestNeighborsHistogram(
+    data: RawDataSet,
+    n: Int,
+    settings: DbscanSettings = new DbscanSettings(),
+    partitioningSettings: PartitioningSettings = new PartitioningSettings()) = {
+    
+    val partitionedData = PointsPartitionedByBoxesRDD(data, partitioningSettings)
+    
+    val pointIdsWithDistances = partitionedData.mapPartitions {
+      it =>
+        {
+          calculateDistancesToNearestNeighbors(it, settings.distanceMeasure, n)
+        }
+    }
+
+    ExploratoryAnalysisHelper.calculateHistogram(pointIdsWithDistances)
+  }
+  
+  /**
    * Find the distance to the n-th closest neighbor of each point
    */
   private[dbscan] def calculateDistancesToNearestNeighbors(
