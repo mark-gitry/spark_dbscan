@@ -65,6 +65,49 @@ object DistanceToNearestNeighborDriver extends DistanceCalculation {
 
     ExploratoryAnalysisHelper.calculateHistogram(pointIdsWithDistances)
   }
+  
+  /**
+   * Find the distance to the n-th closest neighbor of each point
+   */
+  private[dbscan] def calculateDistancesToNearestNeighbors(
+    it: Iterator[(PointSortKey, Point)],
+    distanceMeasure: DistanceMeasure,
+    n: Int) = {
+    
+    /**
+     * Initialize all of the points in the partition
+     */
+    val sortedPoints = it
+      .map ( x => new PointWithDistanceToNNearestNeighbors(x._2, n) )
+      .toArray
+      .sortBy( _.distanceFromOrigin )
+
+    var previousPoints: List[PointWithDistanceToNNearestNeighbors] = Nil
+
+    for (currentPoint <- sortedPoints) {
+
+      for (p <- previousPoints) {
+        val d = calculateDistance(currentPoint, p)(distanceMeasure)
+        
+        p.considerDistance(d)
+        currentPoint.considerDistance(d)
+      }
+      
+      /**
+       * TODO
+       * 
+       * What is this actually doing?
+       */
+      previousPoints = currentPoint :: previousPoints.filter {
+        p => {
+          val d = currentPoint.distanceFromOrigin - p.distanceFromOrigin
+          p.distanceToNthNearestNeighbor >= d
+        }
+      }
+    }
+
+    sortedPoints.filter( _.distanceToNthNearestNeighbor < Double.MaxValue).map ( x => (x.pointId, x.distanceToNthNearestNeighbor)).iterator
+  }
 
   private[dbscan] def calculateDistancesToNearestNeighbors(
     it: Iterator[(PointSortKey, Point)],
