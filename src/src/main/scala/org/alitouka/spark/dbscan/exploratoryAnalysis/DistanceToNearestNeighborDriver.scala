@@ -89,6 +89,7 @@ object DistanceToNearestNeighborDriver extends DistanceCalculation {
   
   /**
    * Find the distance to the n-th closest neighbor of each point
+   * 
    */
   private[dbscan] def calculateDistancesToNearestNeighbors(
     it: Iterator[(PointSortKey, Point)],
@@ -114,11 +115,6 @@ object DistanceToNearestNeighborDriver extends DistanceCalculation {
         currentPoint.considerDistance(d)
       }
       
-      /**
-       * TODO
-       * 
-       * What is this actually doing?
-       */
       previousPoints = currentPoint :: previousPoints.filter {
         p => {
           val d = currentPoint.distanceFromOrigin - p.distanceFromOrigin
